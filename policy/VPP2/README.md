@@ -158,7 +158,15 @@ checkpoints/
     └── google/umt5-xxl/...
 ```
 
-Keep the four bundle files together. `python launch_policy.py --dry-run` checks bundle file sizes against the manifest, the manifest step and the encoder inventory without allocating a GPU. The upstream robot-video pretrained backbone is a future release; training starts from the public Video-10k initializer.
+Keep the four bundle files together. `python launch_policy.py --dry-run` checks bundle file sizes against the manifest, the manifest step and the encoder inventory without allocating a GPU.
+
+The robot-video pretrained Video models are also public, under `checkpoints_video/` in the same Hugging Face repository (about 65.6 GB each; not on ModelScope): `vpp2-video-stage1-49f.pth` (Stage 1, event-level, 49 frames) and `vpp2-video-stage2-17f.pth` (Stage 2, fixed horizon, 17 frames). They serve zero-shot video prediction, which is not part of this adapter — see the upstream [video prediction guide](https://github.com/roboterax/video-prediction-policy-2/blob/main/docs/video_prediction.md); its script is newer than the commit `install.sh` pins. `download_checkpoints.sh` does not fetch them, and the RoboDojo recipe above still starts from Video-10k:
+
+```bash
+# Writes <weights_dir>/checkpoints_video/vpp2-video-stage1-49f.pth
+hf download Haodong082399/VPP2 --local-dir <weights_dir> \
+  --include 'checkpoints_video/vpp2-video-stage1-49f.pth'
+```
 
 ## Configuration
 
